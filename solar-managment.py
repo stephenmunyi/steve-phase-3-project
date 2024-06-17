@@ -1,3 +1,4 @@
+
 import sqlalchemy as db
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
@@ -109,6 +110,37 @@ def lookup_product(session):
     else:
         print("Product not found.")
 
+def display_all_products(session):
+    print("Displaying all products...")
+    products = session.query(Product).all()
+    if products:
+        for product in products:
+            print(f"ProductID: {product.ProductID}, Name: {product.Name}, Description: {product.Description}, Price: {product.Price}, Availability: {product.Availability}")
+    else:
+        print("No products found.")
+
+def delete_product(session):
+    print("Deleting a product...")
+    product_id = int(input("Enter the product ID >>> "))
+    product = session.query(Product).filter_by(ProductID=product_id).first()
+    if product:
+        session.delete(product)
+        session.commit()
+        print("Product Deleted!")
+    else:
+        print("Product not found.")
+
+def remove_user(session):
+    print("Removing a user...")
+    user_id = int(input("Enter the user ID >>> "))
+    user = session.query(User).filter_by(UserID=user_id).first()
+    if user:
+        session.delete(user)
+        session.commit()
+        print("User Removed!")
+    else:
+        print("User not found.")
+
 def main():
     session = create_engine_and_session()
 
@@ -119,7 +151,10 @@ def main():
         print("3. Add a review")
         print("4. Look up a user")
         print("5. Look up a product")
-        print("6. Quit")
+        print("6. Display all products")
+        print("7. Delete a product")
+        print("8. Remove a user")
+        print("9. Quit")
         choice = input("Enter your choice >>> ").strip()
 
         if choice == '1':
@@ -133,6 +168,12 @@ def main():
         elif choice == '5':
             lookup_product(session)
         elif choice == '6':
+            display_all_products(session)
+        elif choice == '7':
+            delete_product(session)
+        elif choice == '8':
+            remove_user(session)
+        elif choice == '9':
             print("Quitting Program")
             break
         else:
@@ -142,4 +183,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
